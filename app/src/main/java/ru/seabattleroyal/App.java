@@ -57,7 +57,6 @@ public class App {
         if (game == null)
             return "unknown-game";
 
-        model.addAttribute("number-of-players", game.getNumberOfPlayers());
         model.addAttribute("username", username);
         return "battlefield";
     }
