@@ -39,7 +39,7 @@ public class App {
 
         messagingTemplate.convertAndSend("/topic/updating-the-list-of-games", "");
 
-        return Map.of("id", gameId);
+        return Map.of("gameId", gameId);
     }
 
     @GetMapping("/api/list-of-games")
@@ -49,14 +49,14 @@ public class App {
         return mapper.writeValueAsString(repository.getGames());
     }
 
-    @GetMapping("/game/{id}")
-    public String getGame(@PathVariable String id, Model model, @RequestParam String username) {
-        Game game = repository.getGame(id);
+    @GetMapping("/game")
+    public String getGame(Model model, @RequestParam String gameId, @RequestParam String username) {
+        Game game = repository.getGame(gameId);
         if (game == null)
             return "404";
 
-        model.addAttribute("id", id.toUpperCase());
-        model.addAttribute("maxPlayers", game.getNumberOfPlayers());
+        model.addAttribute("gameId", gameId.toUpperCase());
+        model.addAttribute("number-of-players", game.getNumberOfPlayers());
         model.addAttribute("username", username);
         return "battlefield";
     }

@@ -66,17 +66,17 @@ async function generateListOfGames() {
     }
 }
 
-function addGameToListOfGames(id: string, players: number, numberOfPlayers: number) {
-    document.querySelector('#list-of-games')?.insertAdjacentHTML('beforeend', createItem(id, players, numberOfPlayers))
-    document.querySelector(`#game-${id}`)?.addEventListener('click', () => {
-        joinInToGame(id)
+function addGameToListOfGames(gameId: string, players: number, numberOfPlayers: number) {
+    document.querySelector('#list-of-games')?.insertAdjacentHTML('beforeend', createItem(gameId, players, numberOfPlayers))
+    document.querySelector(`#game-${gameId}`)?.addEventListener('click', () => {
+        joinInToGame(gameId)
     })
 }
 
-function createItem(id: string, players: number, numberOfPlayers: number): string {
+function createItem(gameId: string, players: number, numberOfPlayers: number): string {
     return `
 <li class="list-group-item align-items-center justify-content-between d-flex">
-    <a href="#" id="game-${id}" class="text-decoration-none">Бой #${id.toUpperCase()}</a>
+    <a href="#" id="game-${gameId}" class="text-decoration-none">Бой #${gameId.toUpperCase()}</a>
     <span class="badge bg-primary rounded-pill">${players} / ${numberOfPlayers}</span>
 </li>
 `
@@ -101,16 +101,16 @@ async function create_game() {
         console.error(response.statusText)
     }
 
-    joinInToGame((await response.json())['id'])
+    joinInToGame((await response.json())['gameId'])
 }
 
-function joinInToGame(id: string) {
+function joinInToGame(gameId: string) {
     const username: string = (document.querySelector('#username') as HTMLInputElement).value
-    if (id === '')
+    if (gameId === '')
         return false
     if (canJoin()) {
         webSocketService.disconnect()
-        window.location.href = `/game/${id}?username=${username}`
+        window.location.href = `/game?gameId=${gameId}&username=${username}`
     }
 }
 
