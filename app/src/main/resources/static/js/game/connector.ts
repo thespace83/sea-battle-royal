@@ -25,9 +25,6 @@ class WebSocketService {
             webSocketFactory: () => new SockJS(WEBSOCKET_URL),
             debug: (msg: string) => {
                 console.log(msg)
-            },
-            connectHeaders: {
-                'username': username
             }
         })
     }
