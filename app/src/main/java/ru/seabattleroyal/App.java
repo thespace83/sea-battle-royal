@@ -1,6 +1,8 @@
 package ru.seabattleroyal;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -12,6 +14,7 @@ import ru.seabattleroyal.repositories.GameRepository;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
+import java.util.UUID;
 
 @SpringBootApplication
 @Controller
@@ -51,12 +54,21 @@ public class App {
     }
 
     @GetMapping("/game")
-    public String getGame(HttpServletRequest request, Model model, @RequestParam String gameId, @RequestParam String username) {
+    public String getGame(
+            @CookieValue(value = "session", defaultValue = "")
+            HttpServletResponse response,
+            Model model,
+            @RequestParam String gameId,
+            @RequestParam String username) {
         Game game = repository.getGame(gameId);
         model.addAttribute("gameId", gameId.toUpperCase());
         if (game == null)
             return "unknown-game";
 
+        Cookie cookie = new Cookie("session", UUID.randomUUID().toString());
+        cookie.setHttpOnly(false);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return "battlefield";
     }
 
