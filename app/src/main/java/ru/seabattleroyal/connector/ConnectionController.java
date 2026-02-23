@@ -43,7 +43,7 @@ public class ConnectionController {
             }
         }
         game.addPlayer(new Player(request.username));
-        messagingTemplate.convertAndSend("/topic/game.{gameId}", new Action(
+        messagingTemplate.convertAndSend("/topic/game." + gameId, new Action(
                 Action.ActionType.PLAYER_JOIN, request.username, null
         ));
         log.info("{} joined game {}", request.username, gameId);
