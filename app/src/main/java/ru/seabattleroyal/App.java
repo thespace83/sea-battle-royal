@@ -55,7 +55,7 @@ public class App {
 
     @GetMapping("/game")
     public String getGame(
-            @CookieValue(value = "session", defaultValue = "")
+            @CookieValue(value = "session", defaultValue = "") String session,
             HttpServletResponse response,
             Model model,
             @RequestParam String gameId,
@@ -65,10 +65,12 @@ public class App {
         if (game == null)
             return "unknown-game";
 
-        Cookie cookie = new Cookie("session", UUID.randomUUID().toString());
-        cookie.setHttpOnly(false);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        if (session.isEmpty()) {
+            Cookie cookie = new Cookie("session", UUID.randomUUID().toString());
+            cookie.setHttpOnly(false);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
         return "battlefield";
     }
 
