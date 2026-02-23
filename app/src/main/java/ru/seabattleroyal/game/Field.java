@@ -1,5 +1,8 @@
 package ru.seabattleroyal.game;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Field {
 
     private final CellType[][] field;
@@ -30,5 +33,17 @@ public class Field {
         EMPTY,
         WOUNDED,
         DEAD
+    }
+
+    @Getter
+    @Setter
+    public static class Position {
+        private int x;
+        private int y;
+
+        public Position(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }

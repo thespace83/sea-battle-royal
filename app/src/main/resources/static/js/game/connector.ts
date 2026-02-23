@@ -29,11 +29,23 @@ class WebSocketService {
         })
     }
 
+    private join(username: string) {
+        console.log('Join as ' + username)
+        this.client.publish({
+            destination: `/app/game.${gameId}.join`,
+            body: JSON.stringify({
+                'username': username
+            })
+        })
+    }
+
     public activate() {
         this.client.onConnect = () => {
             this.client.subscribe(`/topic/game-${gameId}`, () => {
-
+                console.log('Data from /topic/game-' + gameId)
             })
+
+            this.join(username)
         }
 
         this.client.activate()
