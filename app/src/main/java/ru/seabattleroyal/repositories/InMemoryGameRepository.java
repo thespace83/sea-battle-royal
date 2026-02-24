@@ -30,6 +30,8 @@ public class InMemoryGameRepository implements GameRepository {
 
     @Override
     public Game getGame(String gameId) {
+        if (!games.containsKey(gameId))
+            return null;
         return games.get(gameId);
     }
 
