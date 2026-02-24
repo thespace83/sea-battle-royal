@@ -3,18 +3,7 @@ import {Client} from '@stomp/stompjs';
 // @ts-ignore
 import SockJS from 'sockjs-client'
 
-enum ActionType {
-    PLAYER_JOIN,
-    PLAYER_LEAVE,
-    PLAYER_READY,
-    PLAYER_MOVE,
-    PLAYER_ATTACK,
-    PLAYER_LOOSE,
-    PLAYER_WON,
-    GAME_STATED,
-    GAME_FINISHED,
-    UNKNOWN
-}
+import {basicLog, importantActionLog, playerActionLog} from "./logging.js";
 
 class Position {
     private _x: number
@@ -39,63 +28,6 @@ class Position {
 
     set y(value: number) {
         this._y = value;
-    }
-}
-
-class Acton {
-    private _action: number
-    private _username: string | null
-    private _message: string | null
-    private _position: Position | null
-
-    constructor(action: number, username: string | null, message: string | null, position: Position | null) {
-        this._action = action;
-        this._username = username;
-        this._message = message
-        this._position = position;
-    }
-
-    static parse(body: object): Acton {
-        const type: number = ActionType[(body as any).type] as any as number
-        const username: string | null = (body as any).username
-        const message: string | null = (body as any).message
-        let position: Position | null = null
-        if ((body as any).position !== null)
-            position = new Position((body as any).position.x, (body as any).position.y)
-        return new Acton(type, username, message, position)
-    }
-
-
-    get action(): number {
-        return this._action;
-    }
-
-    set action(value: number) {
-        this._action = value;
-    }
-
-    get username(): string | null {
-        return this._username;
-    }
-
-    set username(value: string | null) {
-        this._username = value;
-    }
-
-    get message(): string | null {
-        return this._message;
-    }
-
-    set message(value: string | null) {
-        this._message = value;
-    }
-
-    get position(): Position | null {
-        return this._position;
-    }
-
-    set position(value: Position | null) {
-        this._position = value;
     }
 }
 
@@ -131,10 +63,10 @@ class WebSocketService {
 
     public activate() {
         this.client.onConnect = () => {
-            this.client.subscribe(`/topic/game.${gameId}`, (message: any) => {
-                const action: Acton = Acton.parse(JSON.parse(message.body))
-                console.log(action)
-                console.log(`Data from /topic/game.${gameId}. Message is: ${message.body}`)
+            basicLog('Ты подключился к игре.')
+            this.client.subscribe(`/topic/game.${gameId}.join`, (message: any) => {
+                const username: string = message.body
+                playerActionLog(username, 'подключился к игре.')
             })
 
         }

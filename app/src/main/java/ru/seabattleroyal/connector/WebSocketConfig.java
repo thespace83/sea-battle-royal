@@ -13,9 +13,11 @@ import ru.seabattleroyal.repositories.GameRepository;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final GameRepository repository;
+    private final AuthChannelInterceptor authChannelInterceptor;
 
-    public WebSocketConfig(GameRepository repository) {
+    public WebSocketConfig(GameRepository repository, AuthChannelInterceptor authChannelInterceptor) {
         this.repository = repository;
+        this.authChannelInterceptor = authChannelInterceptor;
     }
 
     @Override
@@ -31,6 +33,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new AuthChannelInterceptor(repository));
+        registration.interceptors(authChannelInterceptor);
     }
 }

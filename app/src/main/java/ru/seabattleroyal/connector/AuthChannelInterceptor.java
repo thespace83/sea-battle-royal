@@ -3,8 +3,10 @@ package ru.seabattleroyal.connector;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -19,9 +21,11 @@ import ru.seabattleroyal.repositories.GameRepository;
 public class AuthChannelInterceptor implements ChannelInterceptor {
 
     private final GameRepository repository;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public AuthChannelInterceptor(GameRepository repository) {
+    public AuthChannelInterceptor(GameRepository repository, @Lazy SimpMessagingTemplate messagingTemplate) {
         this.repository = repository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Override
@@ -40,6 +44,7 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
                         return null;
 
                 game.addPlayer(new Player(username));
+                messagingTemplate.convertAndSend("/topic/game." + gameId + ".join", username);
             }
         }
         return message;
