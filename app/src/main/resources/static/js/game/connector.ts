@@ -45,21 +45,24 @@ class Position {
 class Acton {
     private _action: number
     private _username: string | null
+    private _message: string | null
     private _position: Position | null
 
-    constructor(action: number, username: string | null, position: Position | null) {
+    constructor(action: number, username: string | null, message: string | null, position: Position | null) {
         this._action = action;
         this._username = username;
+        this._message = message
         this._position = position;
     }
 
     static parse(body: object): Acton {
         const type: number = ActionType[(body as any).type] as any as number
         const username: string | null = (body as any).username
+        const message: string | null = (body as any).message
         let position: Position | null = null
         if ((body as any).position !== null)
             position = new Position((body as any).position.x, (body as any).position.y)
-        return new Acton(type, username, position)
+        return new Acton(type, username, message, position)
     }
 
 

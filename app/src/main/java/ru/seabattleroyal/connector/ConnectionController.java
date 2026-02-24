@@ -41,7 +41,7 @@ public class ConnectionController {
         }
         game.addPlayer(new Player(request.username));
         messagingTemplate.convertAndSend("/topic/game." + gameId, new Action(
-                Action.ActionType.PLAYER_JOIN, request.username, null
+                Action.ActionType.PLAYER_JOIN, request.username, null, null
         ));
         log.info("{} joined game {}", request.username, gameId);
     }
@@ -57,11 +57,13 @@ public class ConnectionController {
     public static class Action {
         public ActionType type;
         public String username;
+        public String message;
         public Field.Position position;
 
-        public Action(ActionType type, String username, Field.Position position) {
+        public Action(ActionType type, String username, String message, Field.Position position) {
             this.type = type;
             this.username = username;
+            this.message = message;
             this.position = position;
         }
 
