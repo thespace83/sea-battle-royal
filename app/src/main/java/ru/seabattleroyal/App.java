@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.seabattleroyal.game.Game;
+import ru.seabattleroyal.game.Player;
 import ru.seabattleroyal.repositories.GameRepository;
 import tools.jackson.databind.ObjectMapper;
 
@@ -22,10 +23,12 @@ public class App {
 
     private final GameRepository repository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper mapper;
 
     public App(GameRepository repository, SimpMessagingTemplate messagingTemplate) {
         this.repository = repository;
         this.messagingTemplate = messagingTemplate;
+        this.mapper = new ObjectMapper();
     }
 
     public static void main(String[] args) {
@@ -49,7 +52,6 @@ public class App {
     @GetMapping("/api/list-of-games")
     @ResponseBody
     public String getGames() {
-        ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(repository.getGames());
     }
 
@@ -72,6 +74,30 @@ public class App {
             response.addCookie(cookie);
         }
         return "battlefield";
+    }
+
+    @GetMapping("/api/game")
+    @ResponseBody
+    public String getGameData(
+            @CookieValue(value = "session", defaultValue = "") String session,
+            @RequestParam String gameId
+    ) {
+        Game game = repository.getGame(gameId);
+        if (game == null)
+            return mapper.writeValueAsString(Map.of("error", "Unknown game"));
+        if (session.isEmpty())
+            return mapper.writeValueAsString(Map.of("error", "No session"));
+
+        Player player = null;
+        for (Player p : game.getPlayers()) {
+            if (p.getUuid().toString().equals(session)) {
+                player = p;
+                break;
+            }
+        }
+        if (player == null)
+            return mapper.writeValueAsString(Map.of("error", "No player in the game"));
+        return mapper.writeValueAsString(game.generatePersonalInformation(player));
     }
 
 }
