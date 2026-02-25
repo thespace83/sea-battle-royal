@@ -1,16 +1,15 @@
 import {connect} from "./connector.js";
 
-class Player {
+export const players: Map<string, Player> = new Map()
+
+export class Player {
     private readonly _username: string
-    private readonly _uuid: string
     public field: Field
 
-    constructor(username: string, uuid: string) {
+    constructor(username: string) {
         this._username = username
-        this._uuid = uuid
         this.field = new Field()
     }
-
 }
 
 class Field {
