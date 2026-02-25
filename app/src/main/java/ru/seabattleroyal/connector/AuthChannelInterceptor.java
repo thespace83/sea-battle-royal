@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import ru.seabattleroyal.game.Game;
 import ru.seabattleroyal.game.Player;
 import ru.seabattleroyal.repositories.GameRepository;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -21,6 +24,7 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
 
     private final GameRepository repository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public AuthChannelInterceptor(GameRepository repository, @Lazy SimpMessagingTemplate messagingTemplate) {
         this.repository = repository;
@@ -50,8 +54,13 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
                     }
                 }
 
-                game.addPlayer(new Player(username, session));
-                messagingTemplate.convertAndSend("/topic/game." + gameId + ".join", username);
+                Player player = new Player(username, session);
+                game.addPlayer(player);
+                messagingTemplate.convertAndSend("/topic/game." + gameId + ".join",
+                        mapper.writeValueAsString(Map.of(
+                                "username", username,
+                                "uuid", player.getUuid()
+                        )));
             }
         }
         return message;

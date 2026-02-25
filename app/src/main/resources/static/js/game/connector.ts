@@ -3,6 +3,7 @@ import {Client} from '@stomp/stompjs';
 // @ts-ignore
 import SockJS from 'sockjs-client'
 
+import {players, Player} from "./index.js";
 import {basicLog, importantActionLog, playerActionLog} from "./logging.js";
 
 class Position {
@@ -66,12 +67,16 @@ class WebSocketService {
         this.client.onConnect = () => {
             basicLog('Ты подключился к игре.')
             this.client.subscribe(`/topic/game.${gameId}.join`, (message: any) => {
-                const username: string = message.body
-                onPlayerJoin(username)
+                const body: any = JSON.parse(message.body)
+                const username: string = body.username
+                const uuid: string = body.uuid
+                onPlayerJoin(username, uuid)
             })
             this.client.subscribe(`/topic/game.${gameId}.reconnect`, (message: any) => {
-                const username: string = message.body
-                onPlayerReconnect(username)
+                const body: any = JSON.parse(message.body)
+                const username: string = body.username
+                const uuid: string = body.uuid
+                playerActionLog(username, 'переподключился к игре.')
             })
 
         }
@@ -87,10 +92,7 @@ export function connect() {
     webSocketService.activate()
 }
 
-function onPlayerJoin(username: string) {
-    playerActionLog(username, 'подключился к игре.')
-}
+function onPlayerJoin(username: string, uuid: string) {
+    players.set(uuid, new Player(username))
 
-function onPlayerReconnect(username: string) {
-    playerActionLog(username, 'переподключился к игре.')
 }
