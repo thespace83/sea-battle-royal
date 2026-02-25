@@ -2,7 +2,6 @@ package ru.seabattleroyal.connector;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -42,10 +41,9 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
                     return null;
                 System.out.println(gameId);
                 for (Player player : game.getPlayers()) {
-                    System.out.println(player.getUuid());
-                    if (player.getUsername().equals(username)) {
-                        if (player.getUuid().equals(session)) {
-                            messagingTemplate.convertAndSend("/topic/game." + gameId + ".reconnect", username);
+                    if (player.getSessionUuid().equals(session)) {
+                        if (player.getUsername().equals(username)) {
+                            messagingTemplate.convertAndSend("/topic/game." + gameId + ".reconnect", player.getUuid());
                             return message;
                         }
                         return null;
