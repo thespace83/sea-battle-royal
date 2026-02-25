@@ -76,28 +76,4 @@ public class App {
         return "battlefield";
     }
 
-    @GetMapping("/api/game")
-    @ResponseBody
-    public String getGameData(
-            @CookieValue(value = "session", defaultValue = "") String session,
-            @RequestParam String gameId
-    ) {
-        Game game = repository.getGame(gameId);
-        if (game == null)
-            return mapper.writeValueAsString(Map.of("error", "Unknown game"));
-        if (session.isEmpty())
-            return mapper.writeValueAsString(Map.of("error", "No session"));
-
-        Player player = null;
-        for (Player p : game.getPlayers()) {
-            if (p.getUuid().toString().equals(session)) {
-                player = p;
-                break;
-            }
-        }
-        if (player == null)
-            return mapper.writeValueAsString(Map.of("error", "No player in the game"));
-        return mapper.writeValueAsString(game.generatePersonalInformation(player));
-    }
-
 }
