@@ -28,11 +28,19 @@ public class Field {
         return field[y][x];
     }
 
+    @Getter
     public enum CellType {
-        UNKNOWN,
-        EMPTY,
-        WOUNDED,
-        DEAD
+        UNKNOWN(1),
+        SHIP(2),
+        EMPTY(3),
+        WOUNDED(4),
+        DEAD(5);
+
+        private final int code;
+
+        CellType(int code) {
+            this.code = code;
+        }
     }
 
     @Getter
