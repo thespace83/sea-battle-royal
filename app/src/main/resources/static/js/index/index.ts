@@ -27,6 +27,7 @@ class WebSocketService {
             this.client.subscribe('/topic/updating-the-list-of-games', () => {
                 generateListOfGames().then()
             })
+            generateListOfGames().then()
         }
 
         this.client.activate()
