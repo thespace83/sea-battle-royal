@@ -29,7 +29,6 @@ public class MessageController {
 
     @MessageMapping("/game.{gameId}.info-is-needed")
     public void infoIsNeeded(@DestinationVariable String gameId) {
-        log.info("info-is-needed for game {}", gameId);
         Game game = repository.getGame(gameId);
         if (game == null) {
             return;
