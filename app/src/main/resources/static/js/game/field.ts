@@ -49,7 +49,6 @@ export function initBattlefield() {
         const x: number = parseInt(cell.dataset.col as string)
         const y: number = parseInt(cell.dataset.row as string)
 
-        console.log(player.status, PlayerStatus.PREPARING)
         if (player.status === PlayerStatus.PREPARING) {
             if (cell.classList.contains('ship')) {
                 cell.classList.remove('ship')
