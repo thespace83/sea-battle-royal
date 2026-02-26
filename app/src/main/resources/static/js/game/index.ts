@@ -3,6 +3,33 @@ import {initBattlefield} from "./field.js";
 
 export const players: Map<string, Player> = new Map()
 
+
+const params = new URLSearchParams(window.location.search)
+const gameId: string = params.get('gameId') as string
+const youUsername: string = params.get('username') as string
+let youUuid: string | null = null
+
+document.addEventListener("DOMContentLoaded", () => {
+    connect()
+    initBattlefield()
+})
+
+export function getGameId(): string {
+    return gameId
+}
+
+export function getYouUsername(): string {
+    return youUsername
+}
+
+export function getYouUuid(): string | null {
+    return youUuid
+}
+
+export function setYouUuid(uuid: string) {
+    youUuid = uuid
+}
+
 export class Player {
     private readonly _username: string
     public status: PlayerStatus
@@ -53,6 +80,3 @@ enum CellType {
     WOUNDED,
     DEAD
 }
-
-connect()
-initBattlefield()
