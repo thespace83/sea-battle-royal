@@ -110,7 +110,7 @@ function joinInToGame(gameId: string) {
         return false
     if (canJoin()) {
         webSocketService.disconnect()
-        window.location.href = `/game?gameId=${gameId}&username=${username}`
+        window.location.href = `/game?gameId=${gameId}&username=${encodeURIComponent(username)}`
     }
 }
 
