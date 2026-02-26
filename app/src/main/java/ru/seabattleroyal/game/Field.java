@@ -61,5 +61,18 @@ public class Field {
             this.x = x;
             this.y = y;
         }
+
+        @Override
+        public String toString() {
+            return "(" + x + "," + y + ")";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Position) {
+                return (((Position) obj).getX() == this.x && ((Position) obj).getY() == this.y);
+            }
+            return super.equals(obj);
+        }
     }
 }
