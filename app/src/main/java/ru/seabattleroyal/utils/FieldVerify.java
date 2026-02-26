@@ -12,17 +12,14 @@ import java.util.List;
 public class FieldVerify {
 
     public boolean isFieldCorrect(Field field) {
-        List<List<Field.Position>> ships;
         try {
-            ships = getShipsList(field);
+            List<List<Field.Position>> ships = getShipsList(field);
             System.out.println(ships);
+            return false;
         } catch (Exception e) {
             e.fillInStackTrace();
             return false;
         }
-
-        if (ships == null) return false;
-        return false;
     }
 
     private List<List<Field.Position>> getShipsList(Field field) throws InvalidShipException {
@@ -55,13 +52,16 @@ public class FieldVerify {
             direction = Direction.LEFT;
         } else if (field.getCell(target.getX(), target.getY() + 1) == Field.CellType.SHIP) {
             direction = Direction.DOWN;
+        } else {
+            positions.add(new Field.Position(target.getX(), target.getY()));
+            return positions;
         }
 
         while (field.getCell(target.getX(), target.getY()) == Field.CellType.SHIP) {
             positions.add(new Field.Position(target.getX(), target.getY()));
             if (direction == Direction.LEFT)
                 target.setX(target.getX() + 1);
-            else if (direction == Direction.DOWN)
+            else
                 target.setY(target.getY() + 1);
         }
         return positions;
