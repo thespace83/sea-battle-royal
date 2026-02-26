@@ -12,162 +12,69 @@ import java.util.List;
 public class FieldVerify {
 
     public boolean isFieldCorrect(Field field) {
-        List<Ship> ships = getShipsList(field);
+        List<List<Field.Position>> ships;
+        try {
+            ships = getShipsList(field);
+            System.out.println(ships);
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            return false;
+        }
+
         if (ships == null) return false;
-        return ships.stream().filter(ship -> ship.positions.size() == 1).count() == 4 &&
-                ships.stream().filter(ship -> ship.positions.size() == 2).count() == 3 &&
-                ships.stream().filter(ship -> ship.positions.size() == 3).count() == 2 &&
-                ships.stream().filter(ship -> ship.positions.size() == 4).count() == 1 &&
-                ships.size() == 10;
-    }
-
-    private List<Ship> getShipsList(Field field) {
-        int targetX = 0;
-        int targetY = 0;
-        List<Ship> ships = new ArrayList<>();
-
-        while (true) {
-            while (field.getCell(targetX, targetY) != Field.CellType.SHIP || isCellInShipsList(ships, targetX, targetY)) {
-                if (targetX == field.getSizeX() - 1 && targetY == field.getSizeY() - 1) {
-                    return ships;
-                }
-                targetX++;
-                if (targetX == field.getSizeX()) {
-                    targetX = 0;
-                    targetY++;
-                }
-            }
-
-            Direction direction = getShipDirection(field, targetX, targetY);
-            if (direction == null) return null;
-
-            Ship ship = new Ship();
-            for (int i = 0; i < countLengthOfShipCells(field, targetX, targetY, direction); i++) {
-                ship.positions.add(new Field.Position(
-                        targetX + (direction == Direction.RIGHT ? i : 0),
-                        targetY + (direction == Direction.DOWN ? i : 0)
-                ));
-            }
-            ships.add(ship);
-        }
-    }
-
-    private boolean isCellInShipsList(List<Ship> ships, int x, int y) {
-        for (Ship ship : ships) {
-            if (ship.positions.contains(new Field.Position(x, y))) {
-                return true;
-            }
-        }
         return false;
     }
 
-    private int countLengthOfShipCells(Field field, int x, int y, Direction direction) {
-        int shipCells = 1;
-        x += direction == Direction.RIGHT ? 1 : 0;
-        y += direction == Direction.DOWN ? 1 : 0;
-        while (!isCellEmptyOrOffTheMap(field, x, y)) {
-            if (isCellShip(field, x, y)) {
-                if (direction == Direction.RIGHT &&
-                        isCellEmptyOrOffTheMap(field, x + 1, y - 1) &&
-                        isCellEmptyOrOffTheMap(field, x + 1, y + 1)) {
-                    shipCells++;
-                    x += 1;
-                } else if (direction == Direction.DOWN &&
-                        isCellEmptyOrOffTheMap(field, x - 1, y + 1) &&
-                        isCellEmptyOrOffTheMap(field, x + 1, y + 1)) {
-                    shipCells++;
-                    y += 1;
-                } else {
-                    return -1;
-                }
-            }
-        }
-
-        return shipCells;
-    }
-
-    private Direction getShipDirection(Field field, int targetX, int targetY) {
-        if (isCellEmptyOrOffTheMap(field, targetX - 1, targetY - 1) &&
-                isCellEmptyOrOffTheMap(field, targetX, targetY - 1) &&
-                isCellEmptyOrOffTheMap(field, targetX + 1, targetY - 1) &&
-                isCellEmptyOrOffTheMap(field, targetX - 1, targetY + 1) &&
-                isCellEmptyOrOffTheMap(field, targetX, targetY + 1) &&
-                isCellEmptyOrOffTheMap(field, targetX + 1, targetY + 1) &&
-                isCellEmptyOrOffTheMap(field, targetX - 1, targetY)) {
-            return Direction.RIGHT;
-        } else if (isCellEmptyOrOffTheMap(field, targetX - 1, targetY - 1) &&
-                isCellEmptyOrOffTheMap(field, targetX - 1, targetY) &&
-                isCellEmptyOrOffTheMap(field, targetX - 1, targetY + 1) &&
-                isCellEmptyOrOffTheMap(field, targetX + 1, targetY - 1) &&
-                isCellEmptyOrOffTheMap(field, targetX + 1, targetY) &&
-                isCellEmptyOrOffTheMap(field, targetX + 1, targetY + 1) &&
-                isCellEmptyOrOffTheMap(field, targetX, targetY - 1)) {
-            return Direction.DOWN;
-        }
-
-        return null;
-    }
-
-    private boolean isCellEmptyOrOffTheMap(Field field, int targetX, int targetY) {
-        if (targetX < 0 || targetY < 0 || targetX >= field.getSizeX() || targetY >= field.getSizeY()) {
-            return true;
-        } else return field.getCell(targetX, targetY) == Field.CellType.EMPTY;
-    }
-
-    private boolean isCellShip(Field field, int targetX, int targetY) {
-        if (targetX < 0 || targetY < 0 || targetX >= field.getSizeX() || targetY >= field.getSizeY()) {
-            return false;
-        } else return field.getCell(targetX, targetY) == Field.CellType.SHIP;
-    }
-
-    enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
-
-    private void printPrettyField(Field field) {
-        StringBuffer pretty = new StringBuffer();
-
+    private List<List<Field.Position>> getShipsList(Field field) throws InvalidShipException {
+        List<List<Field.Position>> ships = new ArrayList<>();
         for (int y = 0; y < field.getSizeY(); y++) {
             for (int x = 0; x < field.getSizeX(); x++) {
-                if (field.getCell(x, y) == Field.CellType.EMPTY) {
-                    pretty.append("0");
-                } else if (field.getCell(x, y) == Field.CellType.SHIP) {
-                    pretty.append("#");
-                } else {
-                    pretty.append(field.getCell(x, y));
+                boolean found = false;
+                for (List<Field.Position> ship : ships) {
+                    if (ship.contains(new Field.Position(x, y))) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) continue;
+                if (field.getCell(x, y) == Field.CellType.SHIP) {
+                    List<Field.Position> newShip = findTheShip(field, new Field.Position(x, y));
+                    ships.add(newShip);
                 }
             }
-            pretty.append("\n");
         }
-
-        log.info("PF: \n{}", pretty);
+        return ships;
     }
 
-    private static class Ship {
-        public List<Field.Position> positions;
+    private List<Field.Position> findTheShip(Field field, Field.Position start) throws InvalidShipException {
+        List<Field.Position> positions = new ArrayList<>();
 
-        public Ship() {
-            this.positions = new ArrayList<>();
+        Field.Position target = new Field.Position(start.getX(), start.getY());
+        Direction direction = null;
+        if (field.getCell(target.getX() + 1, target.getY()) == Field.CellType.SHIP) {
+            direction = Direction.LEFT;
+        } else if (field.getCell(target.getX(), target.getY() + 1) == Field.CellType.SHIP) {
+            direction = Direction.DOWN;
         }
 
-        public boolean isAlive(List<Field.Position> openCells) {
-            for (Field.Position position : positions) {
-                if (!openCells.contains(position)) {
-                    return true;
-                }
-            }
-            return false;
+        while (field.getCell(target.getX(), target.getY()) == Field.CellType.SHIP) {
+            positions.add(new Field.Position(target.getX(), target.getY()));
+            if (direction == Direction.LEFT)
+                target.setX(target.getX() + 1);
+            else if (direction == Direction.DOWN)
+                target.setY(target.getY() + 1);
         }
+        return positions;
+    }
 
-        public static Ship getShipByCell(List<Ship> ships, Field.Position position) {
-            for (Ship ship : ships) {
-                if (ship.positions.contains(position)) {
-                    return ship;
-                }
-            }
-            return null;
+    private static class InvalidShipException extends Exception {
+        public InvalidShipException() {
+            super();
         }
+    }
 
+    private enum Direction {
+        DOWN, LEFT
     }
 
 }
