@@ -74,8 +74,9 @@ export enum PlayerStatus {
     WON,
 }
 
-enum CellType {
+export enum CellType {
     UNKNOWN,
+    SHIP,
     EMPTY,
     WOUNDED,
     DEAD

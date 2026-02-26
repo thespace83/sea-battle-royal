@@ -1,3 +1,5 @@
+import {CellType, getYouUuid, Player, players, PlayerStatus} from "./index.js";
+
 const letters: string[] = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К']
 
 const params = new URLSearchParams(window.location.search)
@@ -42,26 +44,21 @@ export function initBattlefield() {
         }
     }
 
-    // document.getElementById(`mode-player-you`).addEventListener('click', function () {
-    //     setMode(`player`, 0)
-    // })
     function handleCellClick(cell: HTMLDivElement) {
+        const player: Player = players.get(getYouUuid() as string) as Player
         const x: number = parseInt(cell.dataset.col as string)
         const y: number = parseInt(cell.dataset.row as string)
-        console.log(x, y)
-        // if (getStatus() === gameStatusTypes.WAITING_SELF_START) {
-        //     const x: number = parseInt(cell.dataset.col as string)
-        //     const y: number = parseInt(cell.dataset.row as string)
-        //     if (cell.classList.contains('ship')) {
-        //         cell.classList.remove('ship')
-        //         players[0].field.field[y][x] = 'EMPTY'
-        //     } else {
-        //         cell.classList.add('ship')
-        //         players[0].field.field[y][x] = 'SHIP'
-        //     }
-        // } else if (getStatus() === gameStatusTypes.WAITING_SELF_MOVE) {
-        //     const x = parseInt(cell.dataset.col)
-        //     const y = parseInt(cell.dataset.row)
+
+        console.log(player.status, PlayerStatus.PREPARING)
+        if (player.status === PlayerStatus.PREPARING) {
+            if (cell.classList.contains('ship')) {
+                cell.classList.remove('ship')
+                player.field.setCell(x, y, CellType.EMPTY)
+            } else {
+                cell.classList.add('ship')
+                player.field.setCell(x, y, CellType.SHIP)
+            }
+        }// else if (getStatus() === gameStatusTypes.WAITING_SELF_MOVE) {
         //     attack(x, y);
         // }
     }
