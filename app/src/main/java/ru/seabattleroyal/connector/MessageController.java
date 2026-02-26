@@ -13,7 +13,6 @@ import ru.seabattleroyal.repositories.GameRepository;
 import ru.seabattleroyal.utils.FieldVerify;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
