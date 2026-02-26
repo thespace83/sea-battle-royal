@@ -82,8 +82,7 @@ class WebSocketService {
             })
 
             this.client.publish({
-                destination: `/app/info-is-needed`,
-                body: getGameId()
+                destination: `/app/game.${getGameId()}.info-is-needed`
             })
         }
 

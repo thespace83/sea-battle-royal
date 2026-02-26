@@ -27,8 +27,8 @@ public class MessageController {
         this.repository = repository;
     }
 
-    @MessageMapping("/info-is-needed")
-    public void infoIsNeeded(@Payload String gameId) {
+    @MessageMapping("/game.{gameId}.info-is-needed")
+    public void infoIsNeeded(@DestinationVariable String gameId) {
         log.info("info-is-needed for game {}", gameId);
         Game game = repository.getGame(gameId);
         if (game == null) {
