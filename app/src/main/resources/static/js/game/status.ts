@@ -4,14 +4,14 @@ export function updateStatus() {
     const statusInfo: HTMLDivElement = document.querySelector('#status-info') as HTMLDivElement
 
     if (players.get(getYouUuid() as string)?.status === PlayerStatus.PREPARING) {
-        statusInfo.innerHTML = getStatusDescriptionItem(`Расставь, ${getYouUuid()}, свой флот`)
+        statusInfo.innerHTML = getStatusDescriptionItem(`Расставь свой флот`)
         return
     }
 
     players.keys().forEach((uuid: string) => {
         const player = players.get(uuid) as Player
         if (player.status === PlayerStatus.MOVE) {
-            statusInfo.innerHTML = getStatusDescriptionItem(`Прямо сейчас ${uuid} ходит`)
+            statusInfo.innerHTML = getStatusDescriptionItem(`Сейчас стреляет ${uuid}`)
             return
         }
     })
