@@ -13,7 +13,6 @@ export function addYouInList(uuid: string) {
 export function updateStatuses() {
     players.keys().forEach((uuid: string) => {
         const player: Player = players.get(uuid) as Player
-        const status = player.status
         let name: string = ''
         switch (player.status) {
             case PlayerStatus.CONNECTING:
