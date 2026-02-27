@@ -8,6 +8,7 @@ import {basicLog, importantLog} from "./logging.js";
 import {addPlayerIntoList, addYouInList, updateStatuses} from "./list-of-players.js";
 import {addChatMessage} from "./chat.js";
 import {addPlayerIntoBattlefields} from "./field.js";
+import {updateStatus} from "./status.js";
 
 let webSocketService: WebSocketService | null = null
 
@@ -207,5 +208,5 @@ function onPlayerMove(uuid: string) {
         })()
     })
     updateStatuses()
-
+    updateStatus()
 }
