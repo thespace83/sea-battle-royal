@@ -71,7 +71,7 @@ export class Field {
             return null;
         }
         // @ts-ignore
-        return this._field[y][x]
+        return parseInt(this._field[y][x])
     }
 
     public setField(field: number[][]) {
