@@ -12,10 +12,10 @@ export function getShipsSet(field: Field): Set<Set<Position>> {
                         break
                     }
                 }
-                if (found) continue
-                if (field.getCell(x, y) == CellType.SHIP) {
-                    ships.add(findTheShip(field, x, y))
-                }
+            }
+            if (found) continue
+            if (field.getCell(x, y) == CellType.SHIP.valueOf()) {
+                ships.add(findTheShip(field, x, y))
             }
         }
     }
@@ -27,14 +27,14 @@ function findTheShip(field: Field, x: number, y: number): Set<Position> {
 
     let direction: number = 0
 
-    if (field.getCell(x, y + 1) == CellType.SHIP) {
+    if (field.getCell(x, y + 1) == CellType.SHIP.valueOf()) {
         direction = 1
     } else {
         positions.add(new Position(x, y))
         return positions
     }
 
-    while (field.getCell(x, y) === CellType.SHIP) {
+    while (field.getCell(x, y) === CellType.SHIP.valueOf()) {
         positions.add(new Position(x, y))
         if (direction == 0)
             x += 1
