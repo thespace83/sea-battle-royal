@@ -37,7 +37,9 @@ public class App {
 
     @PostMapping("/api/create-game")
     @ResponseBody
-    public Map<String, String> createGame(@RequestBody Map<String, Integer> body) {
+    public Map<String, String> createGame(
+            @RequestBody Map<String, Integer> body
+    ) {
         int numberOfPlayers = body.get("number-of-players");
         if (numberOfPlayers > 5 || numberOfPlayers < 2)
             return Map.of("error", "Invalid number of players");
@@ -61,7 +63,8 @@ public class App {
             HttpServletResponse response,
             Model model,
             @RequestParam String gameId,
-            @RequestParam String username) {
+            @RequestParam String username
+    ) {
         Game game = repository.getGame(gameId);
         model.addAttribute("gameId", gameId.toUpperCase());
         if (game == null)
@@ -75,6 +78,35 @@ public class App {
             response.addCookie(cookie);
         }
         return "battlefield";
+    }
+
+    @PostMapping("/api/try-to-join")
+    @ResponseBody
+    public String tryToJoin(
+            @CookieValue(value = "session", defaultValue = "") String session,
+            @RequestBody Map<String, String> body
+    ) {
+        String gameId = body.get("gameId");
+        String username = body.get("username");
+
+        Game game = repository.getGame(gameId);
+        if (game == null)
+            return mapper.writeValueAsString(Map.of("status", "error", "description", "Unknown game"));
+        if (username.isEmpty())
+            return mapper.writeValueAsString(Map.of("status", "error", "description", "Empty username"));
+
+        for (Player player : game.getPlayers()) {
+            if (player.getUsername().equals(username)) {
+                if (player.getSessionUuid().equals(session)) {
+                    return mapper.writeValueAsString(Map.of("status", "successful"));
+                } else {
+                    return mapper.writeValueAsString(Map.of("status", "error", "description", "A player with that username is already in the game."));
+                }
+            } else if (player.getSessionUuid().equals(session)) {
+                return mapper.writeValueAsString(Map.of("status", "successful", "username", player.getUsername()));
+            }
+        }
+        return mapper.writeValueAsString(Map.of("status", "successful"));
     }
 
 }

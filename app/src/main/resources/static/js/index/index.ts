@@ -85,8 +85,13 @@ function createItem(gameId: string, players: number, numberOfPlayers: number): s
 
 async function create_game() {
     const numberOfPlayers = (document.querySelector('#players-count') as HTMLSelectElement).value
-    if (!canJoin())
-        return
+    const username = (document.querySelector('#username') as HTMLInputElement).value
+    if (username === '') {
+        const usernameError = document.querySelector('#write-username-error')
+        if (usernameError)
+            usernameError.innerHTML = 'Чтобы зайти в игру, введите позывной!'
+        return false
+    }
 
     const response = await fetch('/api/create-game', {
         method: 'POST',
@@ -106,23 +111,52 @@ async function create_game() {
 }
 
 function joinInToGame(gameId: string) {
-    const username: string = (document.querySelector('#username') as HTMLInputElement).value
+    let username: string = (document.querySelector('#username') as HTMLInputElement).value
     if (gameId === '')
         return false
-    if (canJoin()) {
-        webSocketService.disconnect()
-        window.location.href = `/game?gameId=${gameId}&username=${encodeURIComponent(username)}`
-    }
+    canJoin(gameId).then((value: Record<string, string | undefined>) => {
+        if (value['status'] === 'successful') {
+            if (value['username'] !== undefined) {
+                username = value['username']
+            }
+            webSocketService.disconnect()
+            window.location.href = `/game?gameId=${gameId}&username=${encodeURIComponent(username)}`
+        } else {
+
+        }
+    })
+
 }
 
-function canJoin(): boolean {
+async function canJoin(gameId: string): Promise<Record<string, string | undefined>> {
     const username = (document.querySelector('#username') as HTMLInputElement).value
     if (username === '') {
         const usernameError = document.querySelector('#write-username-error')
         if (usernameError)
             usernameError.innerHTML = 'Чтобы зайти в игру, введите позывной!'
-        return false
+        return {'status': 'error'}
+    }
+    try {
+        const response = await fetch('/api/try-to-join', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'gameId': gameId,
+                'username': username
+            })
+        })
+        if (!response.ok) {
+            console.error(response.statusText)
+        }
+        const data: Record<string, string> = await response.json()
+        console.log(data)
+        const status: string = data['status'] as string
+        return {'status': status, 'username': data['username']};
+    } catch (error) {
+        console.error(error)
     }
 
-    return true
+    return {'status': 'error'}
 }
