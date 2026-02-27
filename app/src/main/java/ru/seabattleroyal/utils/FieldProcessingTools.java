@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.seabattleroyal.game.Field;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -15,7 +13,7 @@ public class FieldProcessingTools {
 
     public boolean isFieldCorrect(Field field) {
         try {
-            Set<List<Field.Position>> ships = getShipsList(field);
+            Set<Set<Field.Position>> ships = getShipsList(field);
             log.debug("Ships. Input {}, output {}", field, ships);
             log.debug("Ships count: {}. 4-cells: {}, 3-cells: {}, 2-cells: {}, 1-cell: {}. Is others: {}",
                     ships.size(),
@@ -38,12 +36,12 @@ public class FieldProcessingTools {
         }
     }
 
-    public Set<List<Field.Position>> getShipsList(Field field) throws InvalidShipException {
-        Set<List<Field.Position>> ships = new HashSet<>();
+    public Set<Set<Field.Position>> getShipsList(Field field) throws InvalidShipException {
+        Set<Set<Field.Position>> ships = new HashSet<>();
         for (int y = 0; y < field.getSizeY(); y++) {
             for (int x = 0; x < field.getSizeX(); x++) {
                 boolean found = false;
-                for (List<Field.Position> ship : ships) {
+                for (Set<Field.Position> ship : ships) {
                     if (ship.contains(new Field.Position(x, y))) {
                         found = true;
                         break;
@@ -51,7 +49,7 @@ public class FieldProcessingTools {
                 }
                 if (found) continue;
                 if (field.getCell(x, y) == Field.CellType.SHIP) {
-                    List<Field.Position> newShip = findTheShip(field, new Field.Position(x, y));
+                    Set<Field.Position> newShip = findTheShip(field, new Field.Position(x, y));
                     ships.add(newShip);
                 }
             }
@@ -59,8 +57,8 @@ public class FieldProcessingTools {
         return ships;
     }
 
-    private List<Field.Position> findTheShip(Field field, Field.Position start) throws InvalidShipException {
-        List<Field.Position> positions = new ArrayList<>();
+    private Set<Field.Position> findTheShip(Field field, Field.Position start) throws InvalidShipException {
+        Set<Field.Position> positions = new HashSet<>();
 
         Field.Position target = new Field.Position(start.getX(), start.getY());
         Direction direction = null;
