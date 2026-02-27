@@ -6,6 +6,7 @@ export function getShipsSet(field: Field): Set<Set<Position>> {
         for (let x = 0; x < field.sizeX; x++) {
             let found: boolean = false;
             for (let ship of ships) {
+                if (found) break
                 for (let cell of ship) {
                     if (cell.x == x && cell.y == y) {
                         found = true
