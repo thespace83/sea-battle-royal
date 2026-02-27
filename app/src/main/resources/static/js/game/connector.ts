@@ -189,6 +189,7 @@ function onPlayerReady(uuid: string) {
 function onGameReady() {
     importantLog('Бойня началась!')
     document.querySelector('#mode-player-you')?.classList.remove('disabled')
+    document.querySelector('#mode-main')!.innerHTML = 'Все на одном'
     players.keys().forEach((uuid: string) => {
         document.querySelector(`#mode-player-${uuid}`)?.classList.remove('disabled')
     })
