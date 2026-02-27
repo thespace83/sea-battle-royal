@@ -29,7 +29,7 @@ function createImportantLogItem(content: string) {
 function getModifiedContent(content: string): string {
     players.keys().forEach((uuid: string) => {
         const player = players.get(uuid) as Player
-        content.replaceAll(uuid, `<b>${player?.username}</b>`)
+        content = content.replace(uuid, `<b>${player?.username}</b>`)
     })
     return content
 }

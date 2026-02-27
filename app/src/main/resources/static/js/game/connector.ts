@@ -76,7 +76,7 @@ class WebSocketService {
             this.client.subscribe(`/topic/game.${getGameId()}.reconnect`, (message: any) => {
                 const uuid: string = message.body as string
                 const username = players.get(uuid)?.username as string
-                importantLog(`${uuid} переподключился к игре.`)
+                importantLog(`Игрок ${uuid} переподключился к игре.`)
             })
             this.client.subscribe(`/topic/game.${getGameId()}.information-about-players`, (message: any) => {
                 const body: Record<string, string> = JSON.parse(message.body)
@@ -157,8 +157,8 @@ function addPlayer(uuid: string, username: string) {
 }
 
 function onPlayerJoin(uuid: string, username: string) {
-    importantLog(`${uuid} подключился к бою!`)
     addPlayer(uuid, username)
+    importantLog(`Игрок ${uuid} подключился к бою!`)
 }
 
 function informationAboutPlayers(body: Record<string, string>) {
@@ -182,7 +182,7 @@ function onPlayerReady(uuid: string) {
     if (uuid === getYouUuid()) {
         document.querySelector('#start-game-button')?.remove()
     }
-    importantLog(`${uuid} расставил свой флот`)
+    importantLog(`Игрок ${uuid} расставил свой флот`)
 }
 
 function onGameReady() {
