@@ -32,7 +32,6 @@ public class FieldVerify {
                     && ships.stream().noneMatch(ship -> ship.size() != 4 && ship.size() != 3 && ship.size() != 2 && ship.size() != 1);
         } catch (Exception e) {
             log.error("", e);
-            e.fillInStackTrace();
             return false;
         }
     }
