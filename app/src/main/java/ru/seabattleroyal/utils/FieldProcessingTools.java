@@ -94,7 +94,7 @@ public class FieldProcessingTools {
         return positions;
     }
 
-    public static class InvalidShipException extends Exception {
+    public static class InvalidShipException extends RuntimeException {
         public InvalidShipException() {
             super();
         }
