@@ -9,6 +9,15 @@ document.querySelector('#start-game-button')?.addEventListener('click', () => {
     verifyYouField()
 })
 
+document.querySelector('#mode-main')?.addEventListener('click', () => {
+    selectedPlayer = null
+    updateDisplay()
+})
+document.querySelector('#mode-player-you')?.addEventListener('click', () => {
+    selectedPlayer = getYouUuid()
+    updateDisplay()
+})
+
 export function initBattlefield() {
     const battlefield: HTMLDivElement = document.getElementById('battlefield') as HTMLDivElement
 
@@ -65,10 +74,29 @@ export function initBattlefield() {
     }
 }
 
+function updateDisplay() {
+    document.querySelector('#mode-main')?.classList.remove('active', 'mode-active')
+    document.querySelector('#mode-player-you')?.classList.remove('active', 'mode-active')
+    players.keys().forEach(uuid => {
+        document.querySelector(`#mode-player-${uuid}`)?.classList.remove('active', 'mode-active')
+    })
+
+    if (selectedPlayer === null)
+        document.querySelector('#mode-main')?.classList.add('active', 'mode-active')
+    else if (selectedPlayer === getYouUuid())
+        document.querySelector('#mode-player-you')?.classList.add('active', 'mode-active')
+    else
+        document.querySelector(`#mode-player-${selectedPlayer}`)?.classList.add('active', 'mode-active')
+
+
+}
+
+
 export function addPlayerIntoBattlefields(uuid: string) {
     document.querySelector('#list-of-modes')?.insertAdjacentHTML('beforeend', createPlayerBattlefieldItem(uuid))
     document.getElementById(`mode-player-${uuid}`)?.addEventListener('click', function () {
         selectedPlayer = uuid
+        updateDisplay()
     })
 }
 
