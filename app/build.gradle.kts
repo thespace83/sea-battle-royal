@@ -15,8 +15,6 @@ dependencies {
     implementation("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 java {
@@ -27,8 +25,4 @@ java {
 
 application {
     mainClass = "ru.seabattleroyal.App"
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
 }
