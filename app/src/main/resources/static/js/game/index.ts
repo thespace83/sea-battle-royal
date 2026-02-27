@@ -74,10 +74,6 @@ export class Field {
         return parseInt(this._field[y][x])
     }
 
-    public setField(field: number[][]) {
-        this._field = field
-    }
-
     get field(): CellType[][] {
         return this._field;
     }
