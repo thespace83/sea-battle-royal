@@ -70,6 +70,9 @@ public class MessageController {
         assert player != null;
         player.setField(new Field(field));
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".ready", player.getUuid());
+
+
+        log.info("Is players ready: {}", game.isPlayersReady());
     }
 
     @MessageMapping("/game.{gameId}.chat")

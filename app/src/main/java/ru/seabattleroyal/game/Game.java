@@ -39,6 +39,10 @@ public class Game {
         return null;
     }
 
+    public boolean isPlayersReady() {
+        return players.size() == numberOfPlayers && players.stream().allMatch(player -> player.getField() != null);
+    }
+
     public static String generateId() {
         char[] code = new char[6];
         for (int i = 0; i < 6; i++) {
