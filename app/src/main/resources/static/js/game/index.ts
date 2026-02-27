@@ -61,7 +61,15 @@ export class Field {
         this._field[y][x] = type
     }
 
-    public getCell(x: number, y: number): CellType {
+    public getCell(x: number, y: number): CellType | null {
+        if (y >= 0 && y < this._field.length) {
+            // @ts-ignore
+            if (x < 0 || x >= this._field[0].length) {
+                return null;
+            }
+        } else {
+            return null;
+        }
         // @ts-ignore
         return this._field[y][x]
     }
