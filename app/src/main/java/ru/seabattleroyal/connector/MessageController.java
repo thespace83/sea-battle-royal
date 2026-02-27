@@ -53,14 +53,22 @@ public class MessageController {
 
     @MessageMapping("/game.{gameId}.verify-field")
     public void verifyField(
+            Message<?> message,
             @DestinationVariable String gameId,
             @Payload Field.CellType[][] field
     ) {
-        if (new FieldVerify().isFieldCorrect(new Field(field))) {
-            log.info("Field is correct");
-        } else {
-            log.info("Field is not correct");
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        log.info(accessor.getSessionId());
+        Game game = repository.getGame(gameId);
+        String uuid = null;
+        for (Player player : game.getPlayers()) {
+            if (player.getWebSocketSessionId().equals(accessor.getSessionId())) {
+                uuid = player.getUuid();
+            }
         }
+        // TODO - вернуть логику проверки поля на корректность.
+        assert uuid != null;
+        messagingTemplate.convertAndSend("/topic/game." + gameId + ".ready", uuid);
     }
 
     @MessageMapping("/game.{gameId}.chat")
