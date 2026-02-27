@@ -47,8 +47,10 @@ export class Player {
     }
 }
 
-class Field {
+export class Field {
     private readonly _field: CellType[][]
+    private readonly sizeX = 10;
+    private readonly sizeY = 10;
 
     constructor() {
         this._field = Array.from({length: 10}, () => Array(10).fill(CellType.UNKNOWN))
@@ -66,6 +68,32 @@ class Field {
 
     get field(): CellType[][] {
         return this._field;
+    }
+}
+
+export class Position {
+    private _x: number
+    private _y: number
+
+    constructor(x: number, y: number) {
+        this._x = x;
+        this._y = y;
+    }
+
+    get x(): number {
+        return this._x;
+    }
+
+    set x(value: number) {
+        this._x = value;
+    }
+
+    get y(): number {
+        return this._y;
+    }
+
+    set y(value: number) {
+        this._y = value;
     }
 }
 
