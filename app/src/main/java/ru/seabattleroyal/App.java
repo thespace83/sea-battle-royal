@@ -100,7 +100,7 @@ public class App {
                 if (player.getSessionUuid().equals(session)) {
                     return mapper.writeValueAsString(Map.of("status", "successful"));
                 } else {
-                    return mapper.writeValueAsString(Map.of("status", "error", "description", "A player with that username is already in the game."));
+                    return mapper.writeValueAsString(Map.of("status", "error", "description", "A player with that username is already in the game"));
                 }
             } else if (player.getSessionUuid().equals(session)) {
                 return mapper.writeValueAsString(Map.of("status", "successful", "username", player.getUsername()));

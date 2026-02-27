@@ -112,6 +112,7 @@ async function create_game() {
 
 function joinInToGame(gameId: string) {
     let username: string = (document.querySelector('#username') as HTMLInputElement).value
+    const usernameError = document.querySelector('#write-username-error')
     if (gameId === '')
         return false
     canJoin(gameId).then((value: Record<string, string | undefined>) => {
@@ -121,8 +122,24 @@ function joinInToGame(gameId: string) {
             }
             webSocketService.disconnect()
             window.location.href = `/game?gameId=${gameId}&username=${encodeURIComponent(username)}`
+        } else if (value['status'] === 'error') {
+            console.log(value)
+            switch (value['description']) {
+                case 'Empty username': {
+                    usernameError!.innerHTML = 'Чтобы зайти в игру, введи позывной'
+                    break
+                }
+                case 'A player with that username is already in the game': {
+                    usernameError!.innerHTML = 'Игрок с таким именем уже есть в игре'
+                    break
+                }
+                default: {
+                    usernameError!.innerHTML = value['description'] as string
+                    break
+                }
+            }
         } else {
-
+            console.error('Unknown status: ' + value['status'])
         }
     })
 
@@ -130,12 +147,6 @@ function joinInToGame(gameId: string) {
 
 async function canJoin(gameId: string): Promise<Record<string, string | undefined>> {
     const username = (document.querySelector('#username') as HTMLInputElement).value
-    if (username === '') {
-        const usernameError = document.querySelector('#write-username-error')
-        if (usernameError)
-            usernameError.innerHTML = 'Чтобы зайти в игру, введите позывной!'
-        return {'status': 'error'}
-    }
     try {
         const response = await fetch('/api/try-to-join', {
             method: 'POST',
@@ -153,7 +164,7 @@ async function canJoin(gameId: string): Promise<Record<string, string | undefine
         const data: Record<string, string> = await response.json()
         console.log(data)
         const status: string = data['status'] as string
-        return {'status': status, 'username': data['username']};
+        return {'status': status, 'username': data['username'], 'description': data['description']};
     } catch (error) {
         console.error(error)
     }
