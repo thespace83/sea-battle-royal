@@ -75,6 +75,8 @@ export function initBattlefield() {
 }
 
 function updateDisplay() {
+    const cells: NodeListOf<HTMLDivElement> = document.querySelector('#battlefield')!.querySelectorAll('.cell:not(.coordinate)')
+
     document.querySelector('#mode-main')?.classList.remove('active', 'mode-active')
     document.querySelector('#mode-player-you')?.classList.remove('active', 'mode-active')
     players.keys().forEach(uuid => {
@@ -89,9 +91,28 @@ function updateDisplay() {
         document.querySelector('#current-mode-title')!.innerHTML = 'Твои корабли'
     } else {
         document.querySelector(`#mode-player-${selectedPlayer}`)?.classList.add('active', 'mode-active')
-        document.querySelector('#current-mode-title')!.innerHTML = `Твои капитана <b>${players.get(selectedPlayer)}</b>`
+        document.querySelector('#current-mode-title')!.innerHTML = `Поле капитана <b>${players.get(selectedPlayer)?.username}</b>`
     }
 
+    if (selectedPlayer === null) {
+        // TODO
+        return
+    }
+
+    const player: Player = players.get(selectedPlayer) as Player
+    cells.forEach(cell => {
+        const x = parseInt(cell.dataset.col as string)
+        const y = parseInt(cell.dataset.row as string)
+        if (player.field.getCell(x, y) === CellType.DEAD) {
+            cell.classList.add('dead')
+        } else if (player.field.getCell(x, y) === CellType.WOUNDED) {
+            cell.classList.add('wounded')
+        } else if (player.field.getCell(x, y) === CellType.SHIP) {
+            cell.classList.add('ship')
+        } else if (player.field.getCell(x, y) === CellType.EMPTY) {
+            cell.classList.add('empty')
+        }
+    })
 
 }
 
