@@ -123,7 +123,6 @@ function joinInToGame(gameId: string) {
             webSocketService.disconnect()
             window.location.href = `/game?gameId=${gameId}&username=${encodeURIComponent(username)}`
         } else if (value['status'] === 'error') {
-            console.log(value)
             switch (value['description']) {
                 case 'Empty username': {
                     usernameError!.innerHTML = 'Чтобы зайти в игру, введи позывной'
@@ -162,7 +161,6 @@ async function canJoin(gameId: string): Promise<Record<string, string | undefine
             console.error(response.statusText)
         }
         const data: Record<string, string> = await response.json()
-        console.log(data)
         const status: string = data['status'] as string
         return {'status': status, 'username': data['username'], 'description': data['description']};
     } catch (error) {
