@@ -36,7 +36,7 @@ public class FieldVerify {
         }
     }
 
-    private List<List<Field.Position>> getShipsList(Field field) throws InvalidShipException {
+    public List<List<Field.Position>> getShipsList(Field field) throws InvalidShipException {
         List<List<Field.Position>> ships = new ArrayList<>();
         for (int y = 0; y < field.getSizeY(); y++) {
             for (int x = 0; x < field.getSizeX(); x++) {
@@ -94,7 +94,7 @@ public class FieldVerify {
         return positions;
     }
 
-    private static class InvalidShipException extends Exception {
+    public static class InvalidShipException extends Exception {
         public InvalidShipException() {
             super();
         }
