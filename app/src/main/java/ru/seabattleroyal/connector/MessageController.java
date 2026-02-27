@@ -75,7 +75,7 @@ public class MessageController {
         if (game.isPlayersReady()) {
             game.start();
             messagingTemplate.convertAndSend("/topic/game." + gameId + ".start", "");
-            messagingTemplate.convertAndSend("/topic/game." + gameId + ".move", game.getCurrentPlayer().getUuid());
+            messagingTemplate.convertAndSend("/topic/game." + gameId + ".move", game.getPlayers().get(0).getUuid());
         }
     }
 
@@ -111,7 +111,7 @@ public class MessageController {
         Game game = repository.getGame(gameId);
         assert game != null;
 
-        if (!game.getCurrentPlayer().getWebSocketSessionId().equals(accessor.getSessionId()))
+        if (!game.getPlayers().get(game.getCurrentPlayerIndex()).getWebSocketSessionId().equals(accessor.getSessionId()))
             return;
 
         Field.Position position = new Field.Position(
@@ -126,6 +126,8 @@ public class MessageController {
         }
 
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".attack", "");
+        messagingTemplate.convertAndSend("/topic/game." + gameId + ".move", game.getPlayers().get(game.getCurrentPlayerIndex()).getUuid());
+
     }
 
 }

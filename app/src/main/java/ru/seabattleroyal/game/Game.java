@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -15,10 +13,10 @@ public class Game {
 
     private static final Random random = new Random();
 
-    private final Set<Player> players = new HashSet<>();
+    private final List<Player> players = new ArrayList<>();
     private final int numberOfPlayers;
     private final Set<Field.Position> openCells = new HashSet<>();
-    private Player currentPlayer;
+    private int currentPlayerIndex;
 
     public Game(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
@@ -48,6 +46,17 @@ public class Game {
         for (Player player : players) {
             player.attack(position);
         }
+
+        for (Player player : players) {
+            if (player.field.getCell(position) != Field.CellType.EMPTY)
+                return;
+        }
+
+        if (currentPlayerIndex == numberOfPlayers - 1) {
+            currentPlayerIndex = 0;
+        } else {
+            currentPlayerIndex++;
+        }
     }
 
     public boolean isPlayersReady() {
@@ -56,9 +65,7 @@ public class Game {
 
     public void start() {
         assert !isPlayersReady();
-
-        currentPlayer = players.stream().skip(random.nextInt(players.size())).findFirst().orElse(null);
-        assert currentPlayer != null;
+        currentPlayerIndex = 0;
     }
 
     public static String generateId() {
