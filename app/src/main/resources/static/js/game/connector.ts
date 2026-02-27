@@ -9,7 +9,6 @@ import {addPlayerIntoList, addYouInList, updateStatuses} from "./list-of-players
 import {addChatMessage} from "./chat.js";
 import {addPlayerIntoBattlefields, updateFields} from "./field.js";
 import {updateStatus} from "./status.js";
-import {getShipsSet} from "./fieldProcessingTools.js";
 
 let webSocketService: WebSocketService | null = null
 
@@ -41,7 +40,7 @@ class WebSocketService {
     }
 
     public activate() {
-        this.client.onConnect = (frame: any) => {
+        this.client.onConnect = () => {
             basicLog('Ты подключился к игре.')
             this.client.subscribe(`/topic/game.${getGameId()}.join`, (message: any) => {
                 const body: any = JSON.parse(message.body)
@@ -74,7 +73,7 @@ class WebSocketService {
                 const uuid = message.body as string
                 onPlayerMove(uuid)
             })
-            this.client.subscribe(`/topic/game.${getGameId()}.attack`, (message: any) => {
+            this.client.subscribe(`/topic/game.${getGameId()}.attack`, () => {
                 onPlayerAttack()
             })
             this.client.subscribe(`/topic/game.${getGameId()}.update-fields`, (message: any) => {
