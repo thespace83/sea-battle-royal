@@ -1,4 +1,4 @@
-import {players, PlayerStatus} from "./index.js";
+import {Player, players, PlayerStatus} from "./index.js";
 
 export function addPlayerIntoList(uuid: string) {
     document.querySelector('#list-of-players')?.insertAdjacentHTML('beforeend', createItem(uuid))
@@ -10,17 +10,36 @@ export function addYouInList(uuid: string) {
     updatePlayersCounter()
 }
 
-export function setPlayerStatusInList(uuid: string, status: PlayerStatus) {
-    let name = '?Status?'
-    if (status === PlayerStatus.PREPARING)
-        name = 'Готовит флот'
-    else if (status === PlayerStatus.READY)
-        name = 'Готов к бою'
-    else if (status === PlayerStatus.LOOSE)
-        name = 'Без кораблей'
-    else if (status === PlayerStatus.WON)
-        name = 'Всех победил'
-    document.querySelector(`#status-${uuid}`)!.innerHTML = name;
+export function updateStatuses() {
+    players.keys().forEach((uuid: string) => {
+        const player: Player = players.get(uuid) as Player
+        const status = player.status
+        let name: string = ''
+        switch (player.status) {
+            case PlayerStatus.CONNECTING:
+                name = 'Подключается...';
+                break
+            case PlayerStatus.PREPARING:
+                name = 'Готовит флот';
+                break;
+            case PlayerStatus.READY:
+                name = 'К бою готов';
+                break;
+            case PlayerStatus.MOVE:
+                name = 'Стреляет';
+                break;
+            case PlayerStatus.WAIT:
+                name = 'Ждёт своего хода';
+                break;
+            case PlayerStatus.LOOSE:
+                name = 'На дне';
+                break;
+            case PlayerStatus.WON:
+                name = 'Победитель!';
+                break;
+        }
+        document.querySelector(`#status-${uuid}`)!.innerHTML = name;
+    })
 }
 
 function updatePlayersCounter() {
