@@ -158,7 +158,7 @@ function addPlayer(uuid: string, username: string) {
 
 function onPlayerJoin(uuid: string, username: string) {
     addPlayer(uuid, username)
-    importantLog(`Игрок ${uuid} подключился к бою!`)
+    importantLog(`Капитан ${uuid} подключился к бою!`)
 }
 
 function informationAboutPlayers(body: Record<string, string>) {
@@ -183,7 +183,7 @@ function onPlayerReady(uuid: string) {
     if (uuid === getYouUuid()) {
         document.querySelector('#start-game-button')?.remove()
     }
-    importantLog(`Игрок ${uuid} расставил свой флот`)
+    importantLog(`Капитан ${uuid} расставил свой флот`)
 }
 
 function onGameStart() {
@@ -197,7 +197,7 @@ function onGameStart() {
 }
 
 function onPlayerMove(uuid: string) {
-    basicLog(`Игрок ${uuid} готовит пушки`)
+    basicLog(`Капитан ${uuid} готовит пушки`)
 
     players.keys().forEach((_uuid: string) => {
         const player = players.get(_uuid)
