@@ -82,7 +82,7 @@ public class App {
     @PostMapping("/api/try-to-join")
     @ResponseBody
     public String tryToJoin(
-            @CookieValue(value = "session", defaultValue = "") String session,
+            @CookieValue(value = "session", defaultValue = "") String cookieSession,
             @RequestBody Map<String, String> body
     ) {
         String gameId = body.get("gameId");
@@ -96,12 +96,12 @@ public class App {
 
         for (Player player : game.getPlayers()) {
             if (player.getUsername().equals(username)) {
-                if (player.getSessionUuid().equals(session)) {
+                if (player.getCookieSessionUuid().equals(cookieSession)) {
                     return mapper.writeValueAsString(Map.of("status", "successful"));
                 } else {
                     return mapper.writeValueAsString(Map.of("status", "error", "description", "A player with that username is already in the game"));
                 }
-            } else if (player.getSessionUuid().equals(session)) {
+            } else if (player.getCookieSessionUuid().equals(cookieSession)) {
                 return mapper.writeValueAsString(Map.of("status", "successful", "username", player.getUsername()));
             }
         }
