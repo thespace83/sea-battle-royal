@@ -94,6 +94,10 @@ class WebSocketService {
             this.client.subscribe(`/topic/game.${getGameId()}.start`, () => {
                 onGameReady()
             })
+            this.client.subscribe(`/topic/game.${getGameId()}.move`, (message: any) => {
+                const uuid = message.body as string
+                onPlayerMove(uuid)
+            })
 
             this.client.publish({
                 destination: `/app/game.${getGameId()}.info-is-needed`
@@ -190,4 +194,18 @@ function onGameReady() {
     players.keys().forEach((uuid: string) => {
         document.querySelector(`#mode-player-${uuid}`)?.classList.remove('disabled')
     })
+}
+
+function onPlayerMove(uuid: string) {
+    basicLog(`Игрок ${uuid} готовит пушки`)
+
+    players.keys().forEach((_uuid: string) => {
+        const player = players.get(_uuid)
+        player!.status = ((): PlayerStatus => {
+            if (_uuid === uuid) return PlayerStatus.MOVE
+            else return PlayerStatus.WAIT
+        })()
+    })
+    updateStatuses()
+
 }
