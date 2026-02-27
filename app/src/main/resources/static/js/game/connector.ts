@@ -99,6 +99,12 @@ class WebSocketService {
                 const uuid = message.body as string
                 onPlayerMove(uuid)
             })
+            this.client.subscribe(`/topic/game.${getGameId()}.attack`, (message: any) => {
+                const body: Record<string, number> = JSON.parse(message.body)
+                const x = body.x as number
+                const y = body.y as number
+                onPlayerAttack(x, y)
+            })
 
             this.client.publish({
                 destination: `/app/game.${getGameId()}.info-is-needed`
@@ -224,4 +230,13 @@ function onPlayerMove(uuid: string) {
     })
     updateStatuses()
     updateStatus()
+}
+
+function onPlayerAttack(x: number, y: number) {
+    players.keys().forEach((uuid) => {
+        if (players.get(uuid)?.status == PlayerStatus.MOVE) {
+            basicLog(`Капитан ${uuid} сделал свой залп`)
+        }
+    })
+    console.log('attack ' + x + ' ' + y)
 }
