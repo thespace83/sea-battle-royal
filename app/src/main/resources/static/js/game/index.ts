@@ -37,7 +37,7 @@ export class Player {
 
     constructor(username: string) {
         this._username = username
-        this.status = PlayerStatus.CONNECTING
+        this.status = PlayerStatus.PREPARING
         this.field = new Field()
     }
 

@@ -36,7 +36,7 @@ function createItem(uuid: string) {
         <span class="player-color-dot player-${index}-color"></span>
         <span>${username}</span>
     </div>
-    <div class="ship-count" id="status-${uuid}">Подключение...</div>
+    <div class="ship-count" id="status-${uuid}">Готовит флот</div>
 </li>
 `
 }
