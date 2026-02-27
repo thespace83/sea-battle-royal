@@ -143,8 +143,11 @@ export function updateFields(fields: Record<string, Record<string, Array<Array<n
             return
         }
         const player = players.get(uuid) as Player
-
-        
+        for (let y = 0; y < field.length; y++) {
+            for (let x = 0; x < (field.at(y) as string[]).length; x++) {
+                player.field.setCell(x, y, parseInt(field.at(y)?.at(x) as string))
+            }
+        }
     })
     updateDisplay()
 }
