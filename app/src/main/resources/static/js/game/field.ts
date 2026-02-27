@@ -5,8 +5,7 @@ const letters: string[] = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И',
 
 const params = new URLSearchParams(window.location.search)
 const youUsername: string = params.get('username') as string
-
-document.querySelector('#the-username-of-the-main-player-in-the-fields')!.innerHTML = youUsername
+let selectedPlayer: string | null = null
 
 document.querySelector('#start-game-button')?.addEventListener('click', () => {
     verifyYouField()
@@ -64,4 +63,19 @@ export function initBattlefield() {
             }
         }
     }
+}
+
+export function addPlayerIntoBattlefields(uuid: string) {
+    document.querySelector('#list-of-modes')?.insertAdjacentHTML('beforeend', createPlayerBattlefieldItem(uuid))
+    document.getElementById(`mode-player-${uuid}`)?.addEventListener('click', function () {
+        selectedPlayer = uuid
+    })
+}
+
+function createPlayerBattlefieldItem(uuid: string) {
+    const username = players.get(uuid)?.username as string
+    return `
+<button type="button" class="btn btn-outline-primary disabled" id="mode-player-${uuid}">Поле "<span>${username}</span>"
+</button>
+`
 }

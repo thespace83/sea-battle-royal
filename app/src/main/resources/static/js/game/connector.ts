@@ -7,6 +7,7 @@ import {CellType, getGameId, getYouUsername, getYouUuid, Player, players, Player
 import {basicLog, importantActionLog, playerActionLog} from "./logging.js";
 import {addPlayerIntoList, addYouInList, updateStatuses} from "./list-of-players.js";
 import {addChatMessage} from "./chat.js";
+import {addPlayerIntoBattlefields} from "./field.js";
 
 let webSocketService: WebSocketService | null = null
 
@@ -146,8 +147,10 @@ function addPlayer(uuid: string, username: string) {
             }
         }
         players.get(getYouUuid() as string)!.status = PlayerStatus.PREPARING
-    } else
+    } else {
         addPlayerIntoList(uuid)
+        addPlayerIntoBattlefields(uuid)
+    }
 }
 
 function onPlayerJoin(uuid: string, username: string) {
