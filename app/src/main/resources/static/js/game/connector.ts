@@ -176,4 +176,5 @@ function onPlayerReady(uuid: string) {
     if (uuid === getYouUuid()) {
         document.querySelector('#start-game-button')?.remove()
     }
+    importantActionLog(player.username, 'расставил свой флот')
 }
