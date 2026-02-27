@@ -11,7 +11,10 @@ export function updateStatus() {
     players.keys().forEach((uuid: string) => {
         const player = players.get(uuid) as Player
         if (player.status === PlayerStatus.MOVE) {
-            statusInfo.innerHTML = getStatusDescriptionItem(`Сейчас стреляет ${uuid}`)
+            statusInfo.innerHTML = getStatusDescriptionItem(((): string => {
+                if (uuid === getYouUuid()) return `Сейчас твой ход`
+                return `Сейчас стреляет ${uuid}`
+            })())
             return
         }
     })
