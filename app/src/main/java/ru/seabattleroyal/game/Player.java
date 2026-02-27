@@ -25,7 +25,7 @@ public class Player {
         this.uuid = UUID.randomUUID().toString();
         this.cookieSessionUuid = cookieSessionUuid;
         this.webSocketSessionId = webSocketSessionId;
-        this.field = new Field(Field.CellType.UNKNOWN);
+        this.field = null;
         this.color = List.of(0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff).get(random.nextInt(0, 5));
     }
 
