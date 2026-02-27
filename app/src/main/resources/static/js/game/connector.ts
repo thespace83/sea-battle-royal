@@ -68,7 +68,7 @@ class WebSocketService {
                 onPlayerReady(uuid)
             })
             this.client.subscribe(`/topic/game.${getGameId()}.start`, () => {
-                onGameReady()
+                onGameStart()
             })
             this.client.subscribe(`/topic/game.${getGameId()}.move`, (message: any) => {
                 const uuid = message.body as string
@@ -186,10 +186,11 @@ function onPlayerReady(uuid: string) {
     importantLog(`Игрок ${uuid} расставил свой флот`)
 }
 
-function onGameReady() {
+function onGameStart() {
     importantLog('Бойня началась!')
     document.querySelector('#mode-player-you')?.classList.remove('disabled')
     document.querySelector('#mode-main')!.innerHTML = 'Все на одном'
+    document.querySelector('#current-mode-description')!.remove()
     players.keys().forEach((uuid: string) => {
         document.querySelector(`#mode-player-${uuid}`)?.classList.remove('disabled')
     })

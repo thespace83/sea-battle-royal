@@ -81,12 +81,16 @@ function updateDisplay() {
         document.querySelector(`#mode-player-${uuid}`)?.classList.remove('active', 'mode-active')
     })
 
-    if (selectedPlayer === null)
+    if (selectedPlayer === null) {
         document.querySelector('#mode-main')?.classList.add('active', 'mode-active')
-    else if (selectedPlayer === getYouUuid())
+        document.querySelector('#current-mode-title')!.innerHTML = 'Все корабли на одном поле'
+    } else if (selectedPlayer === getYouUuid()) {
         document.querySelector('#mode-player-you')?.classList.add('active', 'mode-active')
-    else
+        document.querySelector('#current-mode-title')!.innerHTML = 'Твои корабли'
+    } else {
         document.querySelector(`#mode-player-${selectedPlayer}`)?.classList.add('active', 'mode-active')
+        document.querySelector('#current-mode-title')!.innerHTML = `Твои капитана <b>${players.get(selectedPlayer)}</b>`
+    }
 
 
 }
