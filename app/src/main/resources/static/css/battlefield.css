@@ -63,16 +63,16 @@
     color: white;
 }
 
-.cell.miss {
+.cell.empty {
     background-color: #BCBCBC;
 }
 
-.cell.hit {
+.cell.wounded {
     background-color: #ffc107;
     color: white;
 }
 
-.cell.kill {
+.cell.dead {
     background-color: #dc3545;
     color: white;
 }
