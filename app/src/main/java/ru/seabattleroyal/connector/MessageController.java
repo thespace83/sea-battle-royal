@@ -111,6 +111,9 @@ public class MessageController {
         Game game = repository.getGame(gameId);
         assert game != null;
 
+        if (!game.getCurrentPlayer().getWebSocketSessionId().equals(accessor.getSessionId()))
+            return;
+
         Field.Position position = new Field.Position(
                 Integer.parseInt(body.get("x")),
                 Integer.parseInt(body.get("y"))
@@ -119,7 +122,11 @@ public class MessageController {
         try {
             game.attack(position);
         } catch (Game.InvalidAttackException ignored) {
+            return;
         }
+
+        messagingTemplate.convertAndSend("/topic/game." + gameId + ".attack",
+                mapper.writeValueAsString(Map.of("x", position.getX(), "y", position.getY())));
     }
 
 }
