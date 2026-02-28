@@ -119,7 +119,12 @@ class WebSocketService {
     public subscribeToPrivateFieldDestination() {
         this.client.subscribe(`/topic/game.${getGameId()}.private-field.${getYouUuid()}`, (message: any) => {
             const body = JSON.parse(message.body)
+            console.log(body.field)
             updateYouField(body.field)
+        })
+
+        this.client.publish({
+            destination: `/app/game.${getGameId()}.info-is-needed`
         })
     }
 }

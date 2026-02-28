@@ -66,7 +66,6 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
             if (destination.split("\\.").length == 4) {
                 String gameId = destination.split("\\.")[1];
                 String uuid = destination.split("\\.")[3];
-                log.info("GameId is {}, uuid is {}", gameId, uuid);
                 Game game = repository.getGame(gameId);
                 for (Player player : game.getPlayers()) {
                     if (player.getUuid().equals(uuid)) {
@@ -74,6 +73,8 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
                             return null;
                         else
                             return message;
+                    } else {
+                        return null;
                     }
                 }
             }

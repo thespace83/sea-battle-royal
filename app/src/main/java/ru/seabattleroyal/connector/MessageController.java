@@ -54,6 +54,10 @@ public class MessageController {
             messagingTemplate.convertAndSend("/topic/game." + gameId + ".start", "");
             messagingTemplate.convertAndSend("/topic/game." + gameId + ".update-fields", mapper.writeValueAsString(game.getPublicFields()));
             messagingTemplate.convertAndSend("/topic/game." + gameId + ".move", game.getPlayers().get(game.getCurrentPlayerIndex()).getUuid());
+            for (Player player : game.getPlayers()) {
+                messagingTemplate.convertAndSend("/topic/game." + gameId + ".private-field." + player.getUuid(),
+                        mapper.writeValueAsString(player.getField()));
+            }
         }
     }
 
