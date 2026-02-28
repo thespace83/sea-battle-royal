@@ -151,6 +151,8 @@ export function addPlayerIntoBattlefields(uuid: string) {
 
 export function updateFields(fields: Record<string, Record<string, Array<Array<string>> | string>>) {
     Object.keys(fields).forEach(uuid => {
+        if (uuid === getYouUuid())
+            return
         const field = (fields[uuid] as Record<string, Array<Array<string>> | string>)['field'] as string[][]
         const player = players.get(uuid) as Player
         for (let y = 0; y < field.length; y++) {
