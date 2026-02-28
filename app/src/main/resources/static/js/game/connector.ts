@@ -13,6 +13,7 @@ import {updateStatus} from "./status.js";
 let webSocketService: WebSocketService | null = null
 
 const WEBSOCKET_URL = 'http://localhost:8080/websocket'
+let isGameStarted: boolean = false;
 
 function getCookie(name: string) {
     const matches = document.cookie.match(new RegExp(
@@ -67,11 +68,11 @@ class WebSocketService {
                 onPlayerReady(uuid)
             })
             this.client.subscribe(`/topic/game.${getGameId()}.start`, () => {
-                onGameStart()
+                if (!isGameStarted) onGameStart()
             })
             this.client.subscribe(`/topic/game.${getGameId()}.move`, (message: any) => {
                 const uuid = message.body as string
-                onPlayerMove(uuid)
+                if (players.get(uuid)!.status !== PlayerStatus.MOVE) onPlayerMove(uuid)
             })
             this.client.subscribe(`/topic/game.${getGameId()}.attack`, () => {
                 onPlayerAttack()
@@ -206,6 +207,7 @@ function onGameStart() {
     players.keys().forEach((uuid: string) => {
         document.querySelector(`#mode-player-${uuid}`)?.classList.remove('disabled')
     })
+    isGameStarted = true
 }
 
 function onPlayerMove(uuid: string) {
