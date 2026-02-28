@@ -101,6 +101,7 @@ function updateDisplay() {
 
     const player: Player = players.get(selectedPlayer) as Player
     cells.forEach(cell => {
+        console.log(player.field)
         const x = parseInt(cell.dataset.col as string)
         const y = parseInt(cell.dataset.row as string)
         cell.classList.remove('dead', 'wounded', 'ship', 'empty')
@@ -136,7 +137,6 @@ export function updateFields(fields: Record<string, Record<string, Array<Array<s
             }
         }
     })
-    updateDisplay()
 }
 
 export function updateYouField(field: Array<Array<string>>) {
@@ -146,6 +146,7 @@ export function updateYouField(field: Array<Array<string>>) {
             player.field.setCell(x, y, parseInt(field.at(y)!.at(x) as string))
         }
     }
+    updateDisplay()
 }
 
 function createPlayerBattlefieldItem(uuid: string) {
