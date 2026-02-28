@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -84,6 +85,10 @@ public class Game {
         } else {
             currentPlayerIndex++;
         }
+    }
+
+    public Set<Player> getAlivePlayers() {
+        return players.stream().filter(Player::isAlive).collect(Collectors.toSet());
     }
 
     public boolean isPlayersReady() {

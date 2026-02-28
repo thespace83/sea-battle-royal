@@ -17,6 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -131,7 +132,13 @@ public class MessageController {
         );
 
         try {
+            Set<Player> alivePlayers = game.getAlivePlayers();
             game.attack(position);
+            for (Player player : alivePlayers) {
+                if (!game.getAlivePlayers().contains(player)) {
+                    messagingTemplate.convertAndSend("/topic/game." + gameId + ".dead", player.getUuid());
+                }
+            }
         } catch (Game.InvalidAttackException ignored) {
             return;
         }

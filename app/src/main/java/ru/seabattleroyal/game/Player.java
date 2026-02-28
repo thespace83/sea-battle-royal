@@ -5,10 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.seabattleroyal.utils.FieldProcessingTools;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Getter
@@ -62,4 +59,16 @@ public class Player {
         });
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Player) {
+            return ((Player) obj).uuid.equals(this.uuid);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
 }

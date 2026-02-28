@@ -77,6 +77,10 @@ class WebSocketService {
             this.client.subscribe(`/topic/game.${getGameId()}.attack`, () => {
                 onPlayerAttack()
             })
+            this.client.subscribe(`/topic/game.${getGameId()}.dead`, (message: any) => {
+                const uuid = message.body as string
+                onPlayerDead(uuid)
+            })
             this.client.subscribe(`/topic/game.${getGameId()}.update-fields`, (message: any) => {
                 const body = JSON.parse(message.body)
                 updateFields(body)
@@ -230,4 +234,10 @@ function onPlayerAttack() {
             basicLog(`Капитан ${uuid} сделал свой залп`)
         }
     })
+}
+
+function onPlayerDead(uuid: string) {
+    importantLog(`Капитан ${uuid} потерял весь свой флот`)
+    players.get(uuid)!.status = PlayerStatus.LOOSE
+    updateStatuses()
 }
