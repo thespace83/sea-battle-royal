@@ -1,4 +1,4 @@
-import {CellType, getYouUuid, Player, players, PlayerStatus} from "./index.js";
+import {CellType, Field, getYouUuid, Player, players, PlayerStatus} from "./index.js";
 import {attack, verifyYouField} from "./connector.js";
 
 const letters: string[] = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К']
@@ -95,13 +95,36 @@ function updateDisplay() {
     }
 
     if (selectedPlayer === null) {
-        // TODO
+        cells.forEach(cell => {
+            const x = parseInt(cell.dataset.col as string)
+            const y = parseInt(cell.dataset.row as string)
+            cell.classList.remove('dead', 'wounded', 'ship', 'empty')
+            players.keys().forEach(uuid => {
+                const field = players.get(uuid)!.field as Field
+                if (field.getCell(x, y) === CellType.EMPTY
+                    && uuid !== getYouUuid()
+                    && !cell.classList.contains('ship')
+                    && !cell.classList.contains('wounded')
+                    && !cell.classList.contains('dead')
+                ) {
+                    cell.classList.add('empty')
+                } else if (field.getCell(x, y) === CellType.SHIP
+                    && !cell.classList.contains('wounded')
+                    && !cell.classList.contains('dead')) {
+                    cell.classList.add('ship')
+                } else if (field.getCell(x, y) === CellType.DEAD
+                    && !cell.classList.contains('wounded')) {
+                    cell.classList.add('dead')
+                } else if (field.getCell(x, y) === CellType.WOUNDED) {
+                    cell.classList.add('wounded')
+                }
+            })
+        })
         return
     }
 
     const player: Player = players.get(selectedPlayer) as Player
     cells.forEach(cell => {
-        console.log(player.field)
         const x = parseInt(cell.dataset.col as string)
         const y = parseInt(cell.dataset.row as string)
         cell.classList.remove('dead', 'wounded', 'ship', 'empty')
@@ -117,7 +140,6 @@ function updateDisplay() {
     })
 
 }
-
 
 export function addPlayerIntoBattlefields(uuid: string) {
     document.querySelector('#list-of-modes')?.insertAdjacentHTML('beforeend', createPlayerBattlefieldItem(uuid))
