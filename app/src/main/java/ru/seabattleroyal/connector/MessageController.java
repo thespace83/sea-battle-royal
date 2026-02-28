@@ -79,9 +79,11 @@ public class MessageController {
             }
         }
 
-        // TODO - вернуть логику проверки поля на корректность.
         assert player != null;
-        player.setField(new Field(field));
+        if (fieldProcessingTools.isFieldCorrect(new Field(field)))
+            player.setField(new Field(field));
+        else return;
+
         messagingTemplate.convertAndSend("/topic/game." + gameId + ".ready", player.getUuid());
 
         if (game.isPlayersReady()) {
