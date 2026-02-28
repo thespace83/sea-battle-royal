@@ -1,0 +1,26 @@
+name: build-project.yml
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build-gradle:
+    name: Build executable .jar file
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Setup JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: 'corretto'
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Build project
+        run: ./gradlew :app:build
+      - name: Upload artefacts
+        uses: actions/upload-artifact@v7
+        with:
+          path: app/build/libs/app.jar
