@@ -138,11 +138,16 @@ public class MessageController {
             for (Player player : alivePlayers) {
                 if (!game.getAlivePlayers().contains(player)) {
                     messagingTemplate.convertAndSend("/topic/game." + gameId + ".dead", player.getUuid());
+                    if (game.getPlayers().get(game.getCurrentPlayerIndex()).getUuid().equals(player.getUuid())) {
+                        game.chooseNextPlayer();
+                    }
                 }
             }
             if (game.getAlivePlayers().size() == 1) {
                 messagingTemplate.convertAndSend("/topic/game." + gameId + ".won",
                         game.getAlivePlayers().stream().findFirst().orElse(null).getUuid());
+                messagingTemplate.convertAndSend("/topic/game." + gameId + ".update-fields",
+                        mapper.writeValueAsString(game.getPublicFields()));
                 repository.deleteGame(gameId);
                 return;
             }
