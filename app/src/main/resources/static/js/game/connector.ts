@@ -117,7 +117,7 @@ class WebSocketService {
     }
 
     public subscribeToPrivateFieldDestination() {
-        this.client.subscribe(`/topic/private-field.${getYouUuid()}`, (message: any) => {
+        this.client.subscribe(`/topic/game.${getGameId()}.private-field.${getYouUuid()}`, (message: any) => {
             console.log('You field is ' + message.body)
         })
     }
