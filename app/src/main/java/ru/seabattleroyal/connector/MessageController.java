@@ -144,6 +144,7 @@ public class MessageController {
                 messagingTemplate.convertAndSend("/topic/game." + gameId + ".won",
                         game.getAlivePlayers().stream().findFirst().orElse(null).getUuid());
                 repository.deleteGame(gameId);
+                return;
             }
         } catch (Game.InvalidAttackException ignored) {
             return;
