@@ -30,9 +30,36 @@ public class Game {
         players.remove(player);
     }
 
-    public Player getPlayer(String uuid) {
+    public Player getPlayerByUuid(String uuid) {
         for (Player player : players) {
             if (player.getUuid().equals(uuid)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerByUsername(String username) {
+        for (Player player : players) {
+            if (player.getUsername().equals(username)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerByWebSocketSessionId(String webSocketSessionId) {
+        for (Player player : players) {
+            if (player.getWebSocketSessionId().equals(webSocketSessionId)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerByCookieSessionUuid(String cookieSessionUuid) {
+        for (Player player : players) {
+            if (player.getCookieSessionUuid().equals(cookieSessionUuid)) {
                 return player;
             }
         }
