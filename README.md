@@ -1,3 +1,5 @@
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/thespace-hub/sea-battle-royal/push-docker-image.yml?style=for-the-badge&label=Build%20docker%20image&link=https%3A%2F%2Fhub.docker.com%2Frepository%2Fdocker%2Fthespacehub%2Fseabattleroyal%2Fgeneral)
+
 # SeaBattleRoyal
 
 **Multiplayer naval battle** in real time.  
@@ -36,6 +38,7 @@ After startup, the site will be available at `http://localhost:8080`.
 ### 2. Manual Launch (without Docker)
 
 #### Requirements
+
 - Java 17+
 - Node.js (for TypeScript compilation)
 - Gradle (you can use the `./gradlew` wrapper)
