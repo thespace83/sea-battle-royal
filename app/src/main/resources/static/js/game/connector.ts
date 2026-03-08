@@ -1,8 +1,3 @@
-// @ts-ignore
-import {Client} from '@stomp/stompjs';
-// @ts-ignore
-import SockJS from 'sockjs-client'
-
 import {CellType, getGameId, getYouUsername, getYouUuid, Player, players, PlayerStatus, setYouUuid} from "./index.js";
 import {basicLog, importantLog} from "./logging.js";
 import {addPlayerIntoList, addYouInList, updateStatuses} from "./list-of-players.js";
@@ -23,11 +18,14 @@ function getCookie(name: string) {
 }
 
 class WebSocketService {
-    private client: Client
+    // @ts-ignore
+    private client: StompJs.Client
 
     constructor() {
         const session = getCookie('session')
-        this.client = new Client({
+        // @ts-ignore
+        this.client = new StompJs.Client({
+            // @ts-ignore
             webSocketFactory: () => new SockJS(WEBSOCKET_URL),
             connectHeaders: {
                 'gameId': getGameId(),
